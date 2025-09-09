@@ -8,33 +8,52 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Academic teal/blue theme */
+    --background: 180 20% 98%;
+    --foreground: 215 25% 27%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 215 25% 27%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 215 25% 27%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 174 72% 56%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 174 72% 48%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 174 20% 95%;
+    --secondary-foreground: 174 72% 25%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 180 20% 96%;
+    --muted-foreground: 215 15% 58%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 174 50% 92%;
+    --accent-foreground: 174 72% 25%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 180 20% 90%;
+    --input: 180 20% 94%;
+    --ring: 174 72% 56%;
+
+    /* Academic gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(174 72% 56%) 0%, hsl(200 89% 70%) 50%, hsl(0 0% 100%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(174 20% 98%) 100%);
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -2px hsl(174 72% 56% / 0.15);
+    --shadow-card: 0 8px 30px -6px hsl(174 50% 50% / 0.2);
+    
+    /* Academic shapes */
+    --academic-shape-1: radial-gradient(circle at 20% 80%, hsl(174 72% 56% / 0.05) 0%, transparent 50%);
+    --academic-shape-2: radial-gradient(circle at 80% 20%, hsl(200 89% 70% / 0.08) 0%, transparent 50%);
+    --academic-shape-3: radial-gradient(circle at 40% 40%, hsl(174 50% 60% / 0.03) 0%, transparent 50%);
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --radius: 0.5rem;
 
@@ -101,5 +120,91 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .academic-background {
+    background: var(--gradient-hero);
+    position: relative;
+  }
+  
+  .academic-background::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      var(--academic-shape-1),
+      var(--academic-shape-2),
+      var(--academic-shape-3);
+    pointer-events: none;
+  }
+  
+  .glass-card {
+    background: var(--gradient-card);
+    backdrop-filter: blur(10px);
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-card);
+  }
+  
+  .tab-active {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .tab-inactive {
+    background: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+    transition: var(--transition-smooth);
+  }
+  
+  .tab-inactive:hover {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+    transform: translateY(-1px);
+  }
+  
+  .academic-button {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    transition: var(--transition-bounce);
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .academic-button:hover {
+    background: hsl(var(--primary-hover));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px -5px hsl(174 72% 56% / 0.25);
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .slide-in {
+    animation: slideIn 0.3s var(--transition-smooth);
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 }
