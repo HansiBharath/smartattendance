@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { GraduationCap, BookOpen, Settings } from 'lucide-react';
 import StudentSignupModal from '@/components/StudentSignupModal';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 type UserRole = 'student' | 'faculty' | 'admin';
 
@@ -14,6 +15,7 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState<UserRole>('student');
   const [showSignupModal, setShowSignupModal] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const tabs = [
     { id: 'student' as const, label: 'Student', icon: GraduationCap },
@@ -23,6 +25,13 @@ const Index = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (activeTab === 'student') {
+      // Navigate to student dashboard
+      navigate('/student-dashboard');
+      return;
+    }
+    
     toast({
       title: "Login Attempted",
       description: `Attempting to log in as ${activeTab}...`,

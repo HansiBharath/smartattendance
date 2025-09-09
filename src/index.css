@@ -8,48 +8,60 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Academic teal/blue theme */
-    --background: 180 20% 98%;
-    --foreground: 215 25% 27%;
+    /* Professional Dashboard Theme - Navy Blue & Teal */
+    --background: 220 13% 97%;
+    --foreground: 220 20% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 27%;
+    --card-foreground: 220 20% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 27%;
+    --popover-foreground: 220 20% 15%;
 
-    --primary: 174 72% 56%;
+    /* Navy Blue Primary */
+    --primary: 223 87% 32%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 174 72% 48%;
+    --primary-hover: 223 87% 28%;
 
-    --secondary: 174 20% 95%;
-    --secondary-foreground: 174 72% 25%;
+    /* Teal Secondary */
+    --secondary: 174 72% 56%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 180 20% 96%;
-    --muted-foreground: 215 15% 58%;
+    --muted: 220 13% 95%;
+    --muted-foreground: 220 10% 50%;
 
     --accent: 174 50% 92%;
     --accent-foreground: 174 72% 25%;
 
-    --destructive: 0 84.2% 60.2%;
+    /* Coral for alerts/highlights */
+    --destructive: 14 91% 69%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 180 20% 90%;
-    --input: 180 20% 94%;
+    --border: 220 13% 91%;
+    --input: 220 13% 94%;
     --ring: 174 72% 56%;
 
-    /* Academic gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(174 72% 56%) 0%, hsl(200 89% 70%) 50%, hsl(0 0% 100%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(174 20% 98%) 100%);
+    /* Professional colors */
+    --navy: 223 87% 32%;
+    --navy-foreground: 0 0% 100%;
+    --teal: 174 72% 56%;
+    --teal-foreground: 0 0% 100%;
+    --coral: 14 91% 69%;
+    --coral-foreground: 0 0% 100%;
+
+    /* Professional gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(223 87% 32%) 0%, hsl(174 72% 56%) 50%, hsl(0 0% 100%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(220 13% 98%) 100%);
     
-    /* Shadows */
-    --shadow-soft: 0 4px 20px -2px hsl(174 72% 56% / 0.15);
-    --shadow-card: 0 8px 30px -6px hsl(174 50% 50% / 0.2);
+    /* Professional shadows */
+    --shadow-soft: 0 4px 20px -2px hsl(220 20% 15% / 0.15);
+    --shadow-card: 0 8px 30px -6px hsl(220 20% 15% / 0.12);
+    --shadow-nav: 0 2px 10px -2px hsl(223 87% 32% / 0.2);
     
-    /* Academic shapes */
-    --academic-shape-1: radial-gradient(circle at 20% 80%, hsl(174 72% 56% / 0.05) 0%, transparent 50%);
-    --academic-shape-2: radial-gradient(circle at 80% 20%, hsl(200 89% 70% / 0.08) 0%, transparent 50%);
-    --academic-shape-3: radial-gradient(circle at 40% 40%, hsl(174 50% 60% / 0.03) 0%, transparent 50%);
+    /* Dashboard shapes */
+    --dashboard-shape-1: radial-gradient(circle at 20% 80%, hsl(174 72% 56% / 0.05) 0%, transparent 50%);
+    --dashboard-shape-2: radial-gradient(circle at 80% 20%, hsl(223 87% 32% / 0.08) 0%, transparent 50%);
+    --dashboard-shape-3: radial-gradient(circle at 40% 40%, hsl(14 91% 69% / 0.03) 0%, transparent 50%);
 
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -57,21 +69,15 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Professional sidebar */
+    --sidebar-background: 223 87% 32%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 223 87% 32%;
+    --sidebar-accent: 223 87% 28%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 223 87% 28%;
+    --sidebar-ring: 174 72% 56%;
   }
 
   .dark {
@@ -138,6 +144,39 @@ All colors MUST be HSL.
       var(--academic-shape-2),
       var(--academic-shape-3);
     pointer-events: none;
+  }
+
+  .dashboard-background {
+    background: hsl(var(--background));
+    position: relative;
+  }
+  
+  .dashboard-background::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      var(--dashboard-shape-1),
+      var(--dashboard-shape-2),
+      var(--dashboard-shape-3);
+    pointer-events: none;
+  }
+
+  .nav-bar {
+    background: hsl(var(--navy));
+    box-shadow: var(--shadow-nav);
+  }
+
+  .dashboard-card {
+    background: var(--gradient-card);
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+  }
+
+  .dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px -8px hsl(220 20% 15% / 0.15);
   }
   
   .glass-card {
