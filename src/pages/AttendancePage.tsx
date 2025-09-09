@@ -8,6 +8,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
+import { Html5QrcodeScanner } from "html5-qrcode";
+import * as faceapi from "face-api.js";
 
 const AttendancePage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -156,67 +158,127 @@ const AttendancePage = () => {
               )}
             </CardContent>
           </Card>
+// Step 2: QR Code Scan
+{currentStep >= 2 && (
+  <Card className={cn(
+    "attendance-step-card transition-all duration-500",
+    currentStep === 2 ? "ring-2 ring-blue-500" : currentStep > 2 ? "opacity-75" : ""
+  )}>
+    <CardHeader className="step-header">
+      <CardTitle className="flex items-center gap-2 text-white">
+        <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+          <QrCode className="h-4 w-4" />
+        </div>
+        Scan QR Code
+      </CardTitle>
+    </CardHeader>
+    <CardContent className="p-6">
+      {currentStep === 2 ? (
+        <div className="text-center space-y-4">
+          <div id="qr-reader" className="mx-auto" />
 
-          {/* === Step 2: QR Scan === */}
-          {currentStep >= 2 && (
-            <Card className={cn("attendance-step-card transition-all duration-500", currentStep === 2 ? "ring-2 ring-blue-500" : currentStep > 2 ? "opacity-75" : "")}>
-              <CardHeader className="step-header">
-                <CardTitle className="flex items-center gap-2 text-white">
-                  <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center"><QrCode className="h-4 w-4" /></div>
-                  Scan QR Code
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                {currentStep === 2 ? (
-                  <div className="text-center space-y-4">
-                    <div className="w-48 h-48 mx-auto border-2 border-gray-300 rounded-lg flex items-center justify-center bg-white">
-                      <div className="w-40 h-40 bg-black qr-pattern rounded"></div>
-                    </div>
-                    <p className="text-gray-600">Scan the live QR Code displayed to verify presence</p>
-                    <div className="flex items-center justify-center gap-2 text-blue-600">
-                      <Clock className="h-4 w-4" />
-                      <span className="font-mono">Refreshing in {qrTimer}s</span>
-                    </div>
-                    <Button onClick={handleQRScan} className="bg-teal-600 hover:bg-teal-700 text-white">QR Code Scanned</Button>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2 text-green-600">
-                    <Check className="h-5 w-5" />
-                    <span>QR Code successfully scanned</span>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )}
+          <p className="text-gray-600">Scan the live QR Code displayed to verify presence</p>
 
-          {/* === Step 3: Face Recognition === */}
-          {currentStep >= 3 && (
-            <Card className={cn("attendance-step-card transition-all duration-500", currentStep === 3 ? "ring-2 ring-blue-500" : currentStep > 3 ? "opacity-75" : "")}>
-              <CardHeader className="step-header">
-                <CardTitle className="flex items-center gap-2 text-white">
-                  <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center"><Camera className="h-4 w-4" /></div>
-                  Face Recognition Validation
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                {currentStep === 3 ? (
-                  <div className="text-center space-y-4">
-                    <div className="w-64 h-48 mx-auto border-2 border-blue-500 rounded-lg flex items-center justify-center bg-gray-100 relative">
-                      <Camera className="h-12 w-12 text-gray-400" />
-                      <div className="absolute inset-4 border-2 border-dashed border-blue-300 rounded-lg"></div>
-                    </div>
-                    <p className="text-gray-600">Align your face within the frame for verification</p>
-                    <Button onClick={handleFaceRecognition} className="bg-teal-600 hover:bg-teal-700 text-white">Face Recognized</Button>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2 text-green-600">
-                    <Check className="h-5 w-5" />
-                    <span>Face recognition completed successfully</span>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )}
+          <div className="flex items-center justify-center gap-2 text-blue-600">
+            <Clock className="h-4 w-4" />
+            <span className="font-mono">Refreshing in {qrTimer}s</span>
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-center gap-2 text-green-600">
+          <Check className="h-5 w-5" />
+          <span>QR Code successfully scanned</span>
+        </div>
+      )}
+    </CardContent>
+  </Card>
+)}
+
+// Initialize QR scanner in useEffect
+useEffect(() => {
+  if (currentStep === 2) {
+    const qrScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 250 });
+    qrScanner.render(
+      (decodedText) => {
+        console.log("QR Code:", decodedText);
+        qrScanner.clear();
+        handleQRScan(); // move to Step 3
+      },
+      (error) => {
+        // ignore errors while scanning
+      }
+    );
+  }
+}, [currentStep]);
+
+         // Step 3: Face Recognition
+{currentStep >= 3 && (
+  <Card className={cn(
+    "attendance-step-card transition-all duration-500",
+    currentStep === 3 ? "ring-2 ring-blue-500" : currentStep > 3 ? "opacity-75" : ""
+  )}>
+    <CardHeader className="step-header">
+      <CardTitle className="flex items-center gap-2 text-white">
+        <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+          <Camera className="h-4 w-4" />
+        </div>
+        Face Recognition Validation
+      </CardTitle>
+    </CardHeader>
+    <CardContent className="p-6">
+      {currentStep === 3 ? (
+        <div className="text-center space-y-4">
+          <video id="face-video" className="w-64 h-48 mx-auto border-2 border-blue-500 rounded-lg bg-gray-100" autoPlay muted />
+
+          <p className="text-gray-600">Align your face within the frame for verification</p>
+        </div>
+      ) : (
+        <div className="flex items-center gap-2 text-green-600">
+          <Check className="h-5 w-5" />
+          <span>Face recognition completed successfully</span>
+        </div>
+      )}
+    </CardContent>
+  </Card>
+)}
+
+// Initialize face-api.js in useEffect
+useEffect(() => {
+  const loadModelsAndStart = async () => {
+    await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
+    await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
+    await faceapi.nets.faceRecognitionNet.loadFromUri("/models");
+
+    const video = document.getElementById("face-video") as HTMLVideoElement;
+    if (!video) return;
+
+    navigator.mediaDevices.getUserMedia({ video: {} })
+      .then((stream) => {
+        video.srcObject = stream;
+      });
+
+    video.addEventListener("play", () => {
+      const canvas = faceapi.createCanvasFromMedia(video);
+      video.parentElement!.append(canvas);
+      const displaySize = { width: video.width, height: video.height };
+      faceapi.matchDimensions(canvas, displaySize);
+
+      const interval = setInterval(async () => {
+        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
+        const resizedDetections = faceapi.resizeResults(detections, displaySize);
+        canvas.getContext("2d")!.clearRect(0, 0, canvas.width, canvas.height);
+        faceapi.draw.drawDetections(canvas, resizedDetections);
+
+        if (detections.length > 0) {
+          clearInterval(interval);
+          handleFaceRecognition(); // move to Step 4
+        }
+      }, 500);
+    });
+  };
+
+  if (currentStep === 3) loadModelsAndStart();
+}, [currentStep]);
 
           {/* Final Status */}
           {attendanceMarked && (
