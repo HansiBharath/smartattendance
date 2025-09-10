@@ -414,4 +414,4 @@ className="text-white hover:bg-white/20"
 );
 };
 
-export default AttendancePage; it is attendacePage.ts
+export default AttendancePage; 
