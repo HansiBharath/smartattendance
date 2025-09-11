@@ -18,14 +18,15 @@ import {
   X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Link } from 'react-router-dom';
 
 const StudentDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
 
   const navigationItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', active: true },
-    { icon: Users, label: 'Attendance' },
+    { icon: LayoutDashboard, label: 'Dashboard', active: true, path: '/student-dashboard' },
+    { icon: Users, label: 'Attendance', path: '/attendance' },
     { icon: Target, label: 'Interests & Goals' },
     { icon: BookOpen, label: 'Programs' },
     { icon: GraduationCap, label: 'Curriculum' },
@@ -144,19 +145,37 @@ const StudentDashboard = () => {
           <ul className="space-y-2">
             {navigationItems.map((item, index) => (
               <li key={index}>
-                <Button
-                  variant="ghost"
-                  className={cn(
-                    "w-full justify-start gap-3 h-12",
-                    item.active && "bg-blue-50 text-blue-600 hover:bg-blue-100",
-                    !sidebarOpen && "md:justify-center md:px-0"
-                  )}
-                >
-                  <item.icon className="h-5 w-5 flex-shrink-0" />
-                  {(sidebarOpen || window.innerWidth < 768) && (
-                    <span className="truncate">{item.label}</span>
-                  )}
-                </Button>
+                {item.path ? (
+                  <Link to={item.path}>
+                    <Button
+                      variant="ghost"
+                      className={cn(
+                        "w-full justify-start gap-3 h-12",
+                        item.active && "bg-blue-50 text-blue-600 hover:bg-blue-100",
+                        !sidebarOpen && "md:justify-center md:px-0"
+                      )}
+                    >
+                      <item.icon className="h-5 w-5 flex-shrink-0" />
+                      {(sidebarOpen || window.innerWidth < 768) && (
+                        <span className="truncate">{item.label}</span>
+                      )}
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button
+                    variant="ghost"
+                    className={cn(
+                      "w-full justify-start gap-3 h-12",
+                      item.active && "bg-blue-50 text-blue-600 hover:bg-blue-100",
+                      !sidebarOpen && "md:justify-center md:px-0"
+                    )}
+                  >
+                    <item.icon className="h-5 w-5 flex-shrink-0" />
+                    {(sidebarOpen || window.innerWidth < 768) && (
+                      <span className="truncate">{item.label}</span>
+                    )}
+                  </Button>
+                )}
               </li>
             ))}
           </ul>

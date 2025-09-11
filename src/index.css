@@ -174,6 +174,29 @@ All colors MUST be HSL.
     transition: var(--transition-smooth);
   }
 
+  .attendance-step-card {
+    background: var(--gradient-card);
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+  }
+
+  .step-header {
+    background: linear-gradient(135deg, hsl(var(--navy)), hsl(var(--teal)));
+  }
+
+  .attendance-confirmation-card {
+    background: var(--gradient-card);
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-card);
+  }
+
+  .qr-pattern {
+    background-image: 
+      repeating-linear-gradient(0deg, transparent, transparent 4px, black 4px, black 8px),
+      repeating-linear-gradient(90deg, transparent, transparent 4px, black 4px, black 8px);
+  }
+
   .dashboard-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 40px -8px hsl(220 20% 15% / 0.15);
