@@ -1,110 +1,155 @@
-import React, { useState } from "react";
-import { Bell, Menu, Plus, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
-import { Link, useLocation } from "react-router-dom";
-import { BarChart3, Calendar, User, Settings, BookOpen, Target, PieChart } from "lucide-react";
+import React, { useState } from 'react';
+import { Bell, Menu, X, Plus, Target, BookOpen, Users, LayoutDashboard, GraduationCap, User } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 
-// Sidebar Navigation Component
-const AppSidebar = () => {
-  const location = useLocation();
-  const currentPath = location.pathname;
-
-  const menuItems = [
-    { title: "Dashboard", url: "/student-dashboard", icon: BarChart3 },
-    { title: "Attendance", url: "/attendance", icon: Calendar },
-    { title: "Interests & Goals", url: "/interests-goals", icon: Target },
-    { title: "Programs", url: "/programs", icon: BookOpen },
-    { title: "Curriculum", url: "/curriculum", icon: PieChart },
-    { title: "Profile & Settings", url: "/profile", icon: Settings },
+// Sidebar component
+const AppSidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  const navigationItems = [
+    { icon: LayoutDashboard, label: 'Dashboard', path: '/student-dashboard' },
+    { icon: Users, label: 'Attendance', path: '/attendance' },
+    { icon: Target, label: 'Interests & Goals', path: '/interests-goals', active: true },
+    { icon: BookOpen, label: 'Programs', path: '/programs' },
+    { icon: GraduationCap, label: 'Curriculum', path: '/curriculum' },
+    { icon: User, label: 'Profile & Settings', path: '/profile' },
   ];
 
   return (
-    <Sidebar className="border-r border-border/40 bg-navy text-white">
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-white/70 font-medium">Navigation</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className={currentPath === item.url ? "bg-teal text-white" : "text-white/80 hover:bg-white/10"}>
-                    <Link to={item.url} className="flex items-center gap-3">
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
+    <>
+      {/* Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <div className={`
+        fixed left-0 top-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 z-50 border-r border-[#E5E7EB]
+        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        lg:translate-x-0 lg:static lg:z-auto
+      `}>
+        <div className="p-4 border-b border-[#E5E7EB]">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-[#333]">Navigation</h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="lg:hidden text-[#333] hover:bg-gray-100"
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+        
+        <nav className="p-4 space-y-2">
+          {navigationItems.map((item) => (
+            <NavLink
+              key={item.label}
+              to={item.path}
+              className={({ isActive }) => `
+                flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                ${isActive || item.active
+                  ? 'bg-[#17BFA7] text-white shadow-sm'
+                  : 'text-[#333] hover:bg-[#17BFA7]/10 hover:text-[#17BFA7]'
+                }
+              `}
+              onClick={onClose}
+            >
+              <item.icon className="w-4 h-4 mr-3" />
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+      </div>
+    </>
   );
 };
 
+// Notification dropdown
+const NotificationDropdown = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  const notifications = [
+    "Free period available, complete AI & ML program in progress",
+    "Assignment due: Data Structures homework",
+    "New course recommendation: Advanced React Development"
+  ];
+
+  if (!isOpen) return null;
+
+  return (
+    <>
+      {/* Overlay */}
+      <div 
+        className="fixed inset-0 z-40"
+        onClick={onClose}
+      />
+      
+      {/* Dropdown */}
+      <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-lg shadow-lg border border-[#E5E7EB] z-50">
+        <div className="p-4 border-b border-[#E5E7EB]">
+          <h3 className="font-semibold text-[#333]">Notifications</h3>
+        </div>
+        <div className="p-2 max-h-64 overflow-y-auto">
+          {notifications.map((notification, index) => (
+            <div key={index} className="p-3 hover:bg-gray-50 rounded-lg text-sm text-[#333] transition-colors">
+              {notification}
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+};
+
+// Goal interface
 interface Goal {
   id: string;
   title: string;
   description: string;
-  category: "Career" | "Education" | "Personal" | "Skills";
+  category: 'Career' | 'Education' | 'Skills' | 'Personal';
   targetYear: string;
 }
 
 const InterestsGoalsPage = () => {
-  const [interests, setInterests] = useState<string[]>([
-    "Artificial Intelligence",
-    "Web Development",
-    "Data Science",
-    "Machine Learning",
-    "Mobile Development"
-  ]);
-
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [interests, setInterests] = useState(['Artificial Intelligence', 'Web Development', 'Data Science']);
   const [goals, setGoals] = useState<Goal[]>([
     {
-      id: "1",
-      title: "Become a Fullstack Developer",
-      description: "Master both frontend and backend technologies to build complete web applications.",
-      category: "Career",
-      targetYear: "2025"
-    },
-    {
-      id: "2",
-      title: "Complete AI & ML Specialization",
-      description: "Finish coursework and projects in artificial intelligence and machine learning.",
-      category: "Education",
-      targetYear: "2024"
-    },
-    {
-      id: "3",
-      title: "Build 10 Personal Projects",
-      description: "Create a portfolio of diverse projects showcasing different skills and technologies.",
-      category: "Skills",
-      targetYear: "2025"
+      id: '1',
+      title: 'Become a Full-Stack Developer',
+      description: 'Master frontend and backend technologies',
+      category: 'Career',
+      targetYear: '2025'
     }
   ]);
-
-  const [newInterest, setNewInterest] = useState("");
+  
+  // Interest management
+  const [newInterest, setNewInterest] = useState('');
   const [showInterestInput, setShowInterestInput] = useState(false);
+  
+  // Goal management
   const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
   const [newGoal, setNewGoal] = useState({
-    title: "",
-    description: "",
-    category: "" as Goal["category"],
-    targetYear: ""
+    title: '',
+    description: '',
+    category: 'Career' as Goal['category'],
+    targetYear: new Date().getFullYear().toString()
   });
 
   const addInterest = () => {
     if (newInterest.trim() && !interests.includes(newInterest.trim())) {
       setInterests([...interests, newInterest.trim()]);
-      setNewInterest("");
+      setNewInterest('');
       setShowInterestInput(false);
     }
   };
@@ -114,13 +159,18 @@ const InterestsGoalsPage = () => {
   };
 
   const addGoal = () => {
-    if (newGoal.title.trim() && newGoal.category && newGoal.targetYear) {
+    if (newGoal.title.trim()) {
       const goal: Goal = {
-        id: Date.now().toString(),
-        ...newGoal
+        ...newGoal,
+        id: Date.now().toString()
       };
       setGoals([...goals, goal]);
-      setNewGoal({ title: "", description: "", category: "" as Goal["category"], targetYear: "" });
+      setNewGoal({
+        title: '',
+        description: '',
+        category: 'Career',
+        targetYear: new Date().getFullYear().toString()
+      });
       setIsGoalModalOpen(false);
     }
   };
@@ -129,271 +179,282 @@ const InterestsGoalsPage = () => {
     setGoals(goals.filter(g => g.id !== goalId));
   };
 
-  const getCategoryColor = (category: Goal["category"]) => {
-    const colors = {
-      Career: "bg-blue-100 text-blue-800",
-      Education: "bg-green-100 text-green-800",
-      Personal: "bg-purple-100 text-purple-800",
-      Skills: "bg-orange-100 text-orange-800"
-    };
-    return colors[category];
+  const getCategoryColor = (category: Goal['category']) => {
+    switch (category) {
+      case 'Career': return 'bg-[#17BFA7] text-white';
+      case 'Education': return 'bg-blue-500 text-white';
+      case 'Skills': return 'bg-green-500 text-white';
+      case 'Personal': return 'bg-purple-500 text-white';
+      default: return 'bg-gray-500 text-white';
+    }
   };
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-light-gray">
-        <AppSidebar />
-        
-        <div className="flex-1 flex flex-col">
-          {/* Top Navigation Bar */}
-          <header className="h-16 bg-navy text-white flex items-center justify-between px-4 shadow-sm sticky top-0 z-10">
-            <div className="flex items-center gap-4">
-              <SidebarTrigger className="text-white hover:bg-white/10">
-                <Menu className="h-5 w-5" />
-              </SidebarTrigger>
-            </div>
-            
-            <h1 className="text-xl font-semibold tracking-tight">Smart Curriculum and Attendance Activity</h1>
-            
-            <Button variant="ghost" size="icon" className="text-white hover:bg-white/10">
-              <Bell className="h-5 w-5" />
+    <div className="min-h-screen bg-[#F5F6FA] flex">
+      {/* Sidebar */}
+      <AppSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col lg:ml-0">
+        {/* Top Bar */}
+        <header className="bg-white shadow-sm border-b border-[#E5E7EB] sticky top-0 z-30">
+          <div className="flex items-center justify-between px-6 h-16">
+            {/* Left: Hamburger Menu */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden text-[#333] hover:bg-gray-100"
+            >
+              <Menu className="w-5 h-5" />
             </Button>
-          </header>
+            
+            {/* Center: App Title */}
+            <h1 className="text-lg font-semibold text-[#333] text-center flex-1 lg:flex-none">
+              Smart Curriculum and Attendance Activity
+            </h1>
+            
+            {/* Right: Notification Bell */}
+            <div className="relative">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setNotificationOpen(!notificationOpen)}
+                className="relative text-[#333] hover:bg-gray-100"
+              >
+                <Bell className="w-5 h-5" />
+                <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+              </Button>
+              <NotificationDropdown 
+                isOpen={notificationOpen} 
+                onClose={() => setNotificationOpen(false)} 
+              />
+            </div>
+          </div>
+        </header>
 
-          {/* Main Content */}
-          <main className="flex-1 p-6 space-y-8">
-            <div className="max-w-6xl mx-auto space-y-8">
-              {/* Page Header */}
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold text-text-primary">Interests & Goals</h1>
-                <p className="text-text-secondary">Manage your academic interests and set long-term career goals to guide your learning journey.</p>
+        {/* Page Content */}
+        <main className="flex-1 p-6 space-y-8">
+          {/* Page Title */}
+          <div className="animate-fade-in">
+            <h1 className="text-3xl font-bold text-[#333] mb-2">Interests & Goals</h1>
+            <p className="text-gray-600">Manage your academic interests and set long-term goals</p>
+          </div>
+
+          {/* Section 1: Your Interests */}
+          <Card className="bg-white rounded-lg shadow-sm border border-[#E5E7EB] animate-fade-in">
+            <CardHeader className="border-b border-[#E5E7EB]">
+              <CardTitle className="flex items-center gap-2 text-[#333]">
+                <Target className="w-5 h-5 text-[#17BFA7]" />
+                Your Interests
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4">
+              {/* Interest Tags */}
+              <div className="flex flex-wrap gap-2">
+                {interests.map((interest, index) => (
+                  <Badge
+                    key={index}
+                    variant="secondary"
+                    className="px-3 py-2 bg-[#17BFA7]/10 text-[#17BFA7] border border-[#17BFA7]/20 hover:bg-[#17BFA7]/20 transition-all duration-200 group cursor-pointer animate-scale-in"
+                  >
+                    {interest}
+                    <button
+                      onClick={() => removeInterest(interest)}
+                      className="ml-2 opacity-70 hover:opacity-100 hover:text-red-500 transition-all duration-200"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </Badge>
+                ))}
               </div>
 
-              {/* Section 1: Your Interests */}
-              <Card className="overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-navy to-teal text-white">
-                  <CardTitle className="flex items-center gap-2">
-                    <Target className="h-5 w-5" />
-                    Your Interests
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    <div className="flex flex-wrap gap-2">
-                      {interests.map((interest) => (
-                        <Badge
-                          key={interest}
-                          variant="secondary"
-                          className="px-3 py-1.5 bg-teal/10 text-teal hover:bg-teal/20 transition-colors group cursor-pointer"
-                        >
-                          {interest}
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-4 w-4 ml-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={() => removeInterest(interest)}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </Badge>
-                      ))}
-                    </div>
+              {/* Add Interest Input */}
+              {showInterestInput ? (
+                <div className="flex gap-2 animate-slide-in-right">
+                  <Input
+                    value={newInterest}
+                    onChange={(e) => setNewInterest(e.target.value)}
+                    placeholder="Enter your interest..."
+                    className="flex-1 border-[#E5E7EB] focus:border-[#17BFA7] focus:ring-[#17BFA7]"
+                    onKeyPress={(e) => e.key === 'Enter' && addInterest()}
+                    autoFocus
+                  />
+                  <Button
+                    onClick={addInterest}
+                    className="bg-[#17BFA7] hover:bg-[#17BFA7]/90 text-white shadow-sm hover:shadow-md transition-all duration-200"
+                    size="sm"
+                  >
+                    Add
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setShowInterestInput(false);
+                      setNewInterest('');
+                    }}
+                    variant="outline"
+                    size="sm"
+                    className="border-[#E5E7EB] text-[#333] hover:bg-gray-50"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  onClick={() => setShowInterestInput(true)}
+                  variant="outline"
+                  className="border-[#17BFA7] text-[#17BFA7] hover:bg-[#17BFA7] hover:text-white transition-all duration-200 hover:shadow-sm"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Interest
+                </Button>
+              )}
+            </CardContent>
+          </Card>
 
-                    {showInterestInput ? (
-                      <div className="flex gap-2 max-w-md">
+          {/* Section 2: Long-term Goals */}
+          <Card className="bg-white rounded-lg shadow-sm border border-[#E5E7EB] animate-fade-in">
+            <CardHeader className="border-b border-[#E5E7EB]">
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2 text-[#333]">
+                  <BookOpen className="w-5 h-5 text-[#17BFA7]" />
+                  Long-term Goals
+                </CardTitle>
+                <Dialog open={isGoalModalOpen} onOpenChange={setIsGoalModalOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-[#17BFA7] hover:bg-[#17BFA7]/90 text-white shadow-sm hover:shadow-md transition-all duration-200">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add New Goal
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md bg-white">
+                    <DialogHeader>
+                      <DialogTitle className="text-[#333]">Add New Goal</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="goal-title" className="text-[#333]">Goal Title</Label>
                         <Input
-                          value={newInterest}
-                          onChange={(e) => setNewInterest(e.target.value)}
-                          placeholder="Enter new interest..."
-                          onKeyPress={(e) => e.key === "Enter" && addInterest()}
-                          className="flex-1"
+                          id="goal-title"
+                          value={newGoal.title}
+                          onChange={(e) => setNewGoal({ ...newGoal, title: e.target.value })}
+                          placeholder="e.g., Become a Full-Stack Developer"
+                          className="border-[#E5E7EB] focus:border-[#17BFA7] focus:ring-[#17BFA7]"
                         />
-                        <Button onClick={addInterest} size="sm" className="bg-teal hover:bg-teal/90">
-                          Add
+                      </div>
+                      <div>
+                        <Label htmlFor="goal-description" className="text-[#333]">Description</Label>
+                        <Textarea
+                          id="goal-description"
+                          value={newGoal.description}
+                          onChange={(e) => setNewGoal({ ...newGoal, description: e.target.value })}
+                          placeholder="Brief description of your goal..."
+                          rows={3}
+                          className="border-[#E5E7EB] focus:border-[#17BFA7] focus:ring-[#17BFA7]"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="goal-category" className="text-[#333]">Category</Label>
+                        <Select
+                          value={newGoal.category}
+                          onValueChange={(value: Goal['category']) => setNewGoal({ ...newGoal, category: value })}
+                        >
+                          <SelectTrigger className="border-[#E5E7EB] focus:border-[#17BFA7]">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white border-[#E5E7EB]">
+                            <SelectItem value="Career">Career</SelectItem>
+                            <SelectItem value="Education">Education</SelectItem>
+                            <SelectItem value="Skills">Skills</SelectItem>
+                            <SelectItem value="Personal">Personal</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="goal-year" className="text-[#333]">Target Year</Label>
+                        <Select
+                          value={newGoal.targetYear}
+                          onValueChange={(value) => setNewGoal({ ...newGoal, targetYear: value })}
+                        >
+                          <SelectTrigger className="border-[#E5E7EB] focus:border-[#17BFA7]">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white border-[#E5E7EB]">
+                            {Array.from({ length: 10 }, (_, i) => {
+                              const year = new Date().getFullYear() + i;
+                              return (
+                                <SelectItem key={year} value={year.toString()}>
+                                  {year}
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="flex gap-2 pt-4">
+                        <Button 
+                          onClick={addGoal} 
+                          className="bg-[#17BFA7] hover:bg-[#17BFA7]/90 text-white flex-1 transition-all duration-200"
+                        >
+                          Add Goal
                         </Button>
-                        <Button
-                          onClick={() => {
-                            setShowInterestInput(false);
-                            setNewInterest("");
-                          }}
-                          variant="outline"
-                          size="sm"
+                        <Button 
+                          variant="outline" 
+                          onClick={() => setIsGoalModalOpen(false)}
+                          className="flex-1 border-[#E5E7EB] text-[#333] hover:bg-gray-50"
                         >
                           Cancel
                         </Button>
                       </div>
-                    ) : (
-                      <Button
-                        onClick={() => setShowInterestInput(true)}
-                        variant="outline"
-                        className="border-teal text-teal hover:bg-teal hover:text-white transition-colors"
-                      >
-                        <Plus className="h-4 w-4 mr-2" />
-                        Add Interest
-                      </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Section 2: Long-term Goals */}
-              <Card className="overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-navy to-teal text-white">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-2">
-                      <BookOpen className="h-5 w-5" />
-                      Long-term Goals
-                    </CardTitle>
-                    <Dialog open={isGoalModalOpen} onOpenChange={setIsGoalModalOpen}>
-                      <DialogTrigger asChild>
-                        <Button variant="secondary" size="sm" className="bg-white/20 hover:bg-white/30 text-white">
-                          <Plus className="h-4 w-4 mr-2" />
-                          Add New Goal
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-md">
-                        <DialogHeader>
-                          <DialogTitle>Add New Goal</DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-4">
-                          <div>
-                            <label className="text-sm font-medium text-text-secondary mb-1.5 block">
-                              Goal Title
-                            </label>
-                            <Input
-                              value={newGoal.title}
-                              onChange={(e) => setNewGoal({ ...newGoal, title: e.target.value })}
-                              placeholder="Enter goal title..."
-                            />
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-text-secondary mb-1.5 block">
-                              Description
-                            </label>
-                            <Textarea
-                              value={newGoal.description}
-                              onChange={(e) => setNewGoal({ ...newGoal, description: e.target.value })}
-                              placeholder="Describe your goal..."
-                              rows={3}
-                            />
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-text-secondary mb-1.5 block">
-                              Category
-                            </label>
-                            <Select
-                              value={newGoal.category}
-                              onValueChange={(value: Goal["category"]) => setNewGoal({ ...newGoal, category: value })}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select category" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="Career">Career</SelectItem>
-                                <SelectItem value="Education">Education</SelectItem>
-                                <SelectItem value="Personal">Personal</SelectItem>
-                                <SelectItem value="Skills">Skills</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-text-secondary mb-1.5 block">
-                              Target Year
-                            </label>
-                            <Select
-                              value={newGoal.targetYear}
-                              onValueChange={(value) => setNewGoal({ ...newGoal, targetYear: value })}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select year" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {Array.from({ length: 10 }, (_, i) => {
-                                  const year = new Date().getFullYear() + i;
-                                  return (
-                                    <SelectItem key={year} value={year.toString()}>
-                                      {year}
-                                    </SelectItem>
-                                  );
-                                })}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div className="flex gap-2 pt-4">
-                            <Button onClick={addGoal} className="flex-1 bg-teal hover:bg-teal/90">
-                              Add Goal
-                            </Button>
-                            <Button
-                              onClick={() => {
-                                setIsGoalModalOpen(false);
-                                setNewGoal({ title: "", description: "", category: "" as Goal["category"], targetYear: "" });
-                              }}
-                              variant="outline"
-                              className="flex-1"
-                            >
-                              Cancel
-                            </Button>
-                          </div>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {goals.map((goal) => (
-                      <Card key={goal.id} className="relative group hover:shadow-md transition-shadow">
-                        <CardContent className="p-4">
-                          <div className="space-y-3">
-                            <div className="flex items-start justify-between">
-                              <h3 className="font-semibold text-text-primary line-clamp-2">{goal.title}</h3>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive/80"
-                                onClick={() => removeGoal(goal.id)}
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            </div>
-                            {goal.description && (
-                              <p className="text-sm text-text-secondary line-clamp-3">{goal.description}</p>
-                            )}
-                            <div className="flex items-center justify-between">
-                              <Badge variant="secondary" className={getCategoryColor(goal.category)}>
-                                {goal.category}
-                              </Badge>
-                              <span className="text-sm font-medium text-text-secondary">
-                                Target: {goal.targetYear}
-                              </span>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-
-                  {goals.length === 0 && (
-                    <div className="text-center py-12">
-                      <Target className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
-                      <h3 className="text-lg font-medium text-text-primary mb-2">No goals yet</h3>
-                      <p className="text-text-secondary mb-4">Start by adding your first long-term goal to track your progress.</p>
-                      <Button
-                        onClick={() => setIsGoalModalOpen(true)}
-                        className="bg-teal hover:bg-teal/90"
-                      >
-                        <Plus className="h-4 w-4 mr-2" />
-                        Add Your First Goal
-                      </Button>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          </main>
-        </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {goals.map((goal) => (
+                  <Card key={goal.id} className="bg-white border border-[#E5E7EB] shadow-sm hover:shadow-md transition-all duration-200 animate-scale-in">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <CardTitle className="text-lg text-[#333] mb-2">{goal.title}</CardTitle>
+                          <Badge className={`${getCategoryColor(goal.category)} text-xs px-2 py-1`}>
+                            {goal.category}
+                          </Badge>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeGoal(goal.id)}
+                          className="text-gray-400 hover:text-red-500 transition-colors p-1"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <p className="text-sm text-gray-600 mb-3">{goal.description}</p>
+                      <div className="flex items-center justify-between text-xs text-gray-500">
+                        <span>Target Year</span>
+                        <span className="font-medium text-[#17BFA7]">{goal.targetYear}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+              
+              {goals.length === 0 && (
+                <div className="text-center py-12">
+                  <Target className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600">No goals yet. Start by adding your first goal!</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </main>
       </div>
-    </SidebarProvider>
+    </div>
   );
 };
 
