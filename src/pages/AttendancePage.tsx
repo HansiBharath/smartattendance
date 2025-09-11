@@ -32,10 +32,10 @@ const [attendanceMarked, setAttendanceMarked] = useState(false);
 const navigationItems = [
 { icon: LayoutDashboard, label: 'Dashboard', path: '/student-dashboard' },
 { icon: Users, label: 'Attendance', active: true, path: '/attendance' },
-{ icon: Target, label: 'Interests & Goals' },
-{ icon: BookOpen, label: 'Programs' },
-{ icon: GraduationCap, label: 'Curriculum' },
-{ icon: User, label: 'Profile & Settings' },
+{ icon: Target, label: 'Interests & Goals', path: '/interests-goals' },
+{ icon: BookOpen, label: 'Programs', path: '/programs' },
+{ icon: GraduationCap, label: 'Curriculum', path: '/curriculum' },
+{ icon: User, label: 'Profile & Settings', path: '/profile' },
 ];
 
 const notifications = [
