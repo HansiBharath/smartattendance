@@ -1,189 +1,138 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { GraduationCap, BookOpen, Settings } from 'lucide-react';
-import StudentSignupModal from '@/components/StudentSignupModal';
-import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
+import students from "@/lib/students.json";
+import facultyList from "@/lib/faculty.json";
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { GraduationCap, BookOpen, Settings } from "lucide-react";
+import StudentSignupModal from "@/components/StudentSignupModal";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
-type UserRole = 'student' | 'faculty' | 'admin';
+type UserRole = "student" | "faculty" | "admin";
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState<UserRole>('student');
+  const [activeTab, setActiveTab] = useState<UserRole>("student");
   const [showSignupModal, setShowSignupModal] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
   const tabs = [
-    { id: 'student' as const, label: 'Student', icon: GraduationCap },
-    { id: 'faculty' as const, label: 'Faculty', icon: BookOpen },
-    { id: 'admin' as const, label: 'Admin', icon: Settings },
+    { id: "student" as const, label: "Student", icon: GraduationCap },
+    { id: "faculty" as const, label: "Faculty", icon: BookOpen },
+    { id: "admin" as const, label: "Admin", icon: Settings },
   ];
 
+  // ✅ handleLogin
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (activeTab === 'student') {
-      // Navigate to student dashboard
-      navigate('/student-dashboard');
+
+    // --- Student Login ---
+    if (activeTab === "student") {
+      const regNoInput = (document.getElementById("register-no") as HTMLInputElement)?.value;
+      const passwordInput = (document.getElementById("student-password") as HTMLInputElement)?.value;
+
+      const student = students.find(
+        (s) => s.regNo === regNoInput && s.firstName === passwordInput
+      );
+
+      if (student) {
+        localStorage.setItem("loggedInStudent", JSON.stringify(student));
+        navigate("/student/student-dashboard");
+      } else {
+        toast({
+          title: "Login Failed",
+          description: "Invalid Register Number or Password",
+          variant: "destructive",
+        });
+      }
       return;
     }
-    
-    toast({
-      title: "Login Attempted",
-      description: `Attempting to log in as ${activeTab}...`,
-    });
+
+    // --- Faculty Login ---
+    if (activeTab === "faculty") {
+      const facultyIdInput = (document.getElementById("faculty-id") as HTMLInputElement)?.value;
+      const facultyPasswordInput = (document.getElementById("faculty-password") as HTMLInputElement)?.value;
+
+      const faculty = facultyList.find(
+        (f) => f.facultyId === facultyIdInput && f.department === facultyPasswordInput
+      );
+
+      if (faculty) {
+        localStorage.setItem("loggedInFaculty", JSON.stringify(faculty));
+        navigate("/faculty/Faculty-dashboard");
+      } else {
+        toast({
+          title: "Login Failed",
+          description: "Invalid Faculty ID or Department",
+          variant: "destructive",
+        });
+      }
+      return;
+    }
+
+    // --- Admin Login ---
+    if (activeTab === "admin") {
+      toast({
+        title: "Login Attempted",
+        description: "Admin login not implemented yet.",
+      });
+      return;
+    }
   };
 
-  const handleForgotPassword = () => {
-    toast({
-      title: "Password Reset",
-      description: "Password reset link will be sent to your registered email.",
-    });
-  };
-
+  // ✅ renderLoginForm
   const renderLoginForm = () => {
-    switch (activeTab) {
-      case 'student':
-        return (
-          <div className="space-y-6 fade-in">
-            <div className="text-center mb-6">
-              <p className="text-muted-foreground">Ready to dive into your studies?</p>
-            </div>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="register-no">Register Number</Label>
-                <Input 
-                  id="register-no" 
-                  type="text" 
-                  placeholder="Enter your register number"
-                  required
-                  className="transition-all duration-200 focus:scale-[1.01]"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="student-password">Password</Label>
-                <Input 
-                  id="student-password" 
-                  type="password" 
-                  placeholder="Enter your password"
-                  required
-                  className="transition-all duration-200 focus:scale-[1.01]"
-                />
-              </div>
-              <Button type="submit" className="w-full academic-button">
-                Login as Student
-              </Button>
-            </form>
-            <div className="text-center space-y-2">
-              <button 
-                onClick={() => setShowSignupModal(true)}
-                className="text-primary hover:text-primary-hover underline transition-colors"
-              >
-                New student? Sign up here
-              </button>
-              <br />
-              <button 
-                onClick={handleForgotPassword}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Forgot Password?
-              </button>
-            </div>
+    if (activeTab === "student") {
+      return (
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <Label htmlFor="register-no">Register No</Label>
+            <Input id="register-no" type="text" required />
           </div>
-        );
-
-      case 'faculty':
-        return (
-          <div className="space-y-6 fade-in">
-            <div className="text-center mb-6">
-              <p className="text-muted-foreground">Empower your class, guide your students.</p>
-            </div>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="faculty-id">Faculty ID</Label>
-                <Input 
-                  id="faculty-id" 
-                  type="text" 
-                  placeholder="Enter your faculty ID"
-                  required
-                  className="transition-all duration-200 focus:scale-[1.01]"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="faculty-password">Password</Label>
-                <Input 
-                  id="faculty-password" 
-                  type="password" 
-                  placeholder="Enter your password"
-                  required
-                  className="transition-all duration-200 focus:scale-[1.01]"
-                />
-              </div>
-              <Button type="submit" className="w-full academic-button">
-                Login as Faculty
-              </Button>
-            </form>
-            <div className="text-center">
-              <button 
-                onClick={handleForgotPassword}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Forgot Password?
-              </button>
-            </div>
+          <div>
+            <Label htmlFor="student-password">Password</Label>
+            <Input id="student-password" type="password" required />
           </div>
-        );
+          <Button type="submit" className="w-full">Login</Button>
+          <Button
+            variant="link"
+            className="w-full"
+            onClick={() => setShowSignupModal(true)}
+          >
+            Sign Up
+          </Button>
+        </form>
+      );
+    }
 
-      case 'admin':
-        return (
-          <div className="space-y-6 fade-in">
-            <div className="text-center mb-6">
-              <p className="text-muted-foreground text-sm">
-                Restricted access — authorized administrators only.
-              </p>
-            </div>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="admin-id">Admin ID</Label>
-                <Input 
-                  id="admin-id" 
-                  type="text" 
-                  placeholder="Enter your admin ID"
-                  required
-                  className="transition-all duration-200 focus:scale-[1.01]"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="admin-password">Password</Label>
-                <Input 
-                  id="admin-password" 
-                  type="password" 
-                  placeholder="Enter your password"
-                  required
-                  className="transition-all duration-200 focus:scale-[1.01]"
-                />
-              </div>
-              <Button type="submit" className="w-full academic-button">
-                Login as Admin
-              </Button>
-            </form>
-            <div className="text-center">
-              <button 
-                onClick={handleForgotPassword}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Forgot Password?
-              </button>
-            </div>
+    if (activeTab === "faculty") {
+      return (
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <Label htmlFor="faculty-id">Faculty ID</Label>
+            <Input id="faculty-id" type="text" required />
           </div>
-        );
+          <div>
+            <Label htmlFor="faculty-password">Password (Department)</Label>
+            <Input id="faculty-password" type="password" required />
+          </div>
+          <Button type="submit" className="w-full">Login</Button>
+        </form>
+      );
+    }
 
-      default:
-        return null;
+    if (activeTab === "admin") {
+      return (
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <Label htmlFor="admin-username">Admin Username</Label>
+            <Input id="admin-username" type="text" required />
+          </div>
+          <Button type="submit" className="w-full">Login</Button>
+        </form>
+      );
     }
   };
 
@@ -197,9 +146,7 @@ const Index = () => {
               <GraduationCap className="w-8 h-8 text-white" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Smart Curriculum
-          </h1>
+          <h1 className="text-3xl font-bold text-white mb-2">Smart Curriculum</h1>
           <p className="text-white/80 text-lg">
             Welcome back! Let's make learning smarter.
           </p>
@@ -217,7 +164,7 @@ const Index = () => {
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 ${
-                      activeTab === tab.id ? 'tab-active' : 'tab-inactive'
+                      activeTab === tab.id ? "tab-active" : "tab-inactive"
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -243,8 +190,8 @@ const Index = () => {
         </div>
       </div>
 
-      <StudentSignupModal 
-        open={showSignupModal} 
+      <StudentSignupModal
+        open={showSignupModal}
         onOpenChange={setShowSignupModal}
       />
     </div>

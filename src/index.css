@@ -270,3 +270,157 @@ All colors MUST be HSL.
     }
   }
 }
+/* ---------------- Interests Section ---------------- */
+@layer components {
+  .interests-background {
+    background: hsl(var(--background));
+    position: relative;
+  }
+
+  .interests-background::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 25% 25%, hsl(var(--teal) / 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, hsl(var(--navy) / 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 50% 20%, hsl(var(--coral) / 0.04) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  .interests-card {
+    background: var(--gradient-card);
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+  }
+
+  .interests-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px -8px hsl(220 20% 15% / 0.15);
+  }
+
+  .interests-header {
+    background: linear-gradient(135deg, hsl(var(--teal)), hsl(var(--navy)));
+    color: hsl(var(--primary-foreground));
+    padding: 1rem;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+
+  .interests-button {
+    background: hsl(var(--teal));
+    color: hsl(var(--teal-foreground));
+    transition: var(--transition-bounce);
+    box-shadow: var(--shadow-soft);
+    border-radius: var(--radius);
+    padding: 0.5rem 1rem;
+  }
+
+  .interests-button:hover {
+    background: hsl(var(--navy));
+    color: hsl(var(--navy-foreground));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px -5px hsl(223 87% 32% / 0.25);
+  }
+
+  .interests-tab-active {
+    background: hsl(var(--teal));
+    color: hsl(var(--teal-foreground));
+    box-shadow: var(--shadow-soft);
+  }
+
+  .interests-tab-inactive {
+    background: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+    transition: var(--transition-smooth);
+  }
+
+  .interests-tab-inactive:hover {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+    transform: translateY(-1px);
+  }
+}
+/* ---------------- Custom Fixes ---------------- */
+@layer components {
+  /* Card border in blue */
+  .interests-card {
+    @apply border-2;
+    border-color: hsl(var(--navy));
+  }
+
+  /* Dynamic interest tags with gradient colors like headings */
+  .interests-tag {
+    @apply flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium;
+    background: linear-gradient(135deg, hsl(var(--teal)), hsl(var(--navy)));
+    color: hsl(var(--primary-foreground));
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-smooth);
+  }
+
+  .interests-tag-remove {
+    @apply ml-1 p-1 rounded-full hover:bg-white/20;
+  }
+
+  /* Goal chips (category) styled similarly */
+  .interests-category {
+    @apply text-xs px-2 py-1 rounded-full font-medium;
+    background: linear-gradient(135deg, hsl(var(--navy)), hsl(var(--teal)));
+    color: hsl(var(--primary-foreground));
+  }
+
+  /* Goal year pill */
+  .interests-year {
+    @apply flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-md;
+    background: hsl(var(--muted));
+    color: hsl(var(--foreground));
+  }
+
+  /* Delete button inside goal card */
+  .interests-delete-btn {
+    @apply p-2 rounded-full hover:bg-red-100 transition;
+    color: hsl(var(--destructive));
+  }
+
+  /* Modal white background fix */
+  .interests-modal {
+    @apply bg-white rounded-lg shadow-xl p-6 w-full max-w-lg;
+  }
+}
+/* 🌈 Profile Page Theming */
+
+/* Card headers (Profile Info, Settings) */
+.profile-header {
+  background: linear-gradient(135deg, hsl(var(--teal)), hsl(var(--navy)));
+  color: hsl(var(--primary-foreground));
+  padding: 1rem;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+/* Primary buttons (Save Changes, Manage Interests & Goals) */
+.profile-btn {
+  background: linear-gradient(135deg, hsl(var(--teal)), hsl(var(--navy)));
+  color: #fff;
+  transition: opacity 0.2s ease;
+}
+.profile-btn:hover {
+  opacity: 0.9;
+}
+
+/* Sub-cards (Attendance Report, Academic Records) */
+.profile-subcard {
+  border: 2px solid hsl(var(--navy));
+  border-radius: var(--radius);
+}
+.profile-subcard span {
+  font-weight: 500;
+  color: hsl(var(--navy));
+}
+
+/* Toggle switches & selects */
+.toggle-checkbox:checked {
+  accent-color: hsl(var(--teal));
+}
+select {
+  border-color: hsl(var(--navy));
+}

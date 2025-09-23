@@ -1,0 +1,68 @@
+
+[
+  {
+    "regNo": "AI2025-001",
+    "firstName": "Ananya",
+    "lastName": "Reddy",
+    "email": "ananya.reddy@example.in",
+    "phone": "+91 9000010001",
+    "dob": "2006-04-15",
+    "gender": "Female",
+    "address": "Hyderabad, Telangana, India",
+    "department": "Artificial Intelligence",
+    "semester": "1-1",
+    "sectionId": "ai-1a"
+  },
+  {
+    "regNo": "AI2025-002",
+    "firstName": "Meera",
+    "lastName": "Sharma",
+    "email": "meera.sharma@example.in",
+    "phone": "+91 9000010002",
+    "dob": "2006-07-21",
+    "gender": "Female",
+    "address": "Bengaluru, Karnataka, India",
+    "department": "Artificial Intelligence",
+    "semester": "1-1",
+    "sectionId": "ai-1a"
+  },
+  {
+    "regNo": "AI2025-003",
+    "firstName": "Priya",
+    "lastName": "Patel",
+    "email": "priya.patel@example.in",
+    "phone": "+91 9000010003",
+    "dob": "2006-02-10",
+    "gender": "Female",
+    "address": "Ahmedabad, Gujarat, India",
+    "department": "Artificial Intelligence",
+    "semester": "1-1",
+    "sectionId": "ai-1a"
+  },
+  {
+    "regNo": "AI2025-004",
+    "firstName": "Ishita",
+    "lastName": "Verma",
+    "email": "ishita.verma@example.in",
+    "phone": "+91 9000010004",
+    "dob": "2006-09-05",
+    "gender": "Female",
+    "address": "Lucknow, Uttar Pradesh, India",
+    "department": "Artificial Intelligence",
+    "semester": "1-1",
+    "sectionId": "ai-1a"
+  },
+  {
+    "regNo": "AI2025-005",
+    "firstName": "Kavya",
+    "lastName": "Menon",
+    "email": "kavya.menon@example.in",
+    "phone": "+91 9000010005",
+    "dob": "2006-11-28",
+    "gender": "Female",
+    "address": "Kochi, Kerala, India",
+    "department": "Artificial Intelligence",
+    "semester": "1-1",
+    "sectionId": "ai-1a"
+  }
+] 
