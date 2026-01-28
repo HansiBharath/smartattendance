@@ -20,18 +20,5 @@ The project focuses on building a clean user interface and understanding basic p
 - Vite
 - Tailwind CSS
 
----
 
-## How to Run the Project Locally
-
-### Prerequisites
-- Node.js
-- npm
-
-### Steps
-```sh
-git clone https://github.com/HansiBharath/smartattendance.git
-cd smartattendance
-npm install
-npm run dev
 
